@@ -1,0 +1,29 @@
+{
+  "name": "application-status-monitoring-deamon",
+  "version": "1.0.0",
+  "description": "A deamon which should be deployed in servers in order to monitor application status",
+  "main": "app.js",
+  "dependencies": {
+    "bunyan": "1.8.12",
+    "pm2": "2.8.0",
+    "socket.io": "2.0.4",
+    "socket.io-client": "2.0.4",
+    "websocket": "1.0.25"
+  },
+  "devDependencies": {
+    "eslint": "4.11.0",
+    "eslint-config-airbnb": "16.1.0",
+    "eslint-plugin-import": "2.8.0",
+    "eslint-plugin-jsx-a11y": "6.0.2",
+    "eslint-plugin-react": "7.5.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "node.js",
+    "monitoring"
+  ],
+  "author": "Dumindu Karunathilaka <dumindukarunathilaka@gmail.com>",
+  "license": "ISC"
+}
