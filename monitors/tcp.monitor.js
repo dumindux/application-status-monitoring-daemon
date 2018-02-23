@@ -3,7 +3,7 @@ const logger = require('../utils/logger');
 
 function getStatusOfApplication(application) {
     return new Promise((resolve) => {
-        const connection = net.connect({ host: 'localhost', port: application.port }, () => {
+        const connection = net.connect({ host: application.host, port: application.port }, () => {
             connection.destroy();
             logger.info(`successfully connected to ${application.name}`);
             resolve({

@@ -6,6 +6,7 @@
   "dependencies": {
     "bunyan": "1.8.12",
     "pm2": "2.8.0",
+    "request": "2.83.0",
     "socket.io": "2.0.4",
     "socket.io-client": "2.0.4",
     "websocket": "1.0.25"
