@@ -9,13 +9,19 @@ function pm2Connect() {
     });
 }
 
-function getStatusOfApplication(application) {
-    return new Promise((resolve) => {
+async function getStatusOfApplication(application) {
+    const err = await pm2Connect();
+    if (err) {
+        return [];
+    }
+
+    const status = await new Promise((resolve) => {
         pm2.describe(application.processName, (err, processDescription) => {
             if (err || processDescription.length === 0) {
                 logger.error(`error while connecting to ${application.name}`);
                 logger.error(err);
                 resolve({
+                    monitoringServer: global.config.serverName,
                     name: application.name,
                     status: 'offline',
                     type: 'pm2'
@@ -26,6 +32,7 @@ function getStatusOfApplication(application) {
             logger.info(`successfully connected to ${application.name}`);
 
             resolve({
+                monitoringServer: global.config.serverName,
                 name: application.name,
                 status: processDescription[0].pm2_env.status === 'online' ? 'online' : 'offline',
                 type: 'pm2',
@@ -38,20 +45,10 @@ function getStatusOfApplication(application) {
             });
         });
     });
-}
-
-async function getStatus(applications) {
-    const err = await pm2Connect();
-    if (err) {
-        return [];
-    }
-
-    const results = await Promise.all(applications.map(application =>
-        getStatusOfApplication(application)));
 
     pm2.disconnect();
 
-    return results;
+    return status;
 }
 
-module.exports = { getStatus };
+module.exports = { getStatusOfApplication };
