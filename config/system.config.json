@@ -1,0 +1,13 @@
+{
+  "application": {
+    "title": "Application Status Monitoring Deamon",
+    "version": "1.0.0",
+    "releaseDate": "01-12-2017",
+    "port": 1675,
+    "serverName": "web-a"
+  },
+  "tls": {
+    "key": "/home/duminduk/keys/server.key",
+    "cert": "/home/duminduk/keys/server.crt"
+  }
+}
