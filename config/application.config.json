@@ -4,19 +4,19 @@
     "type": "tcp",
     "host": "localhost",
     "port": 4440,
-    "interval": 20
+    "interval": 2000
   },
   {
     "name": "SFTP File Processor",
     "type": "pm2",
     "host": "localhost",
     "processName": "file-processor",
-    "interval": 20
+    "interval": 2000
   },
   {
     "name": "SFTP File Processor",
     "type": "http",
     "url": "http://localhost:3000/health-check",
-    "interval": 20
+    "interval": 2000
   }
 ]

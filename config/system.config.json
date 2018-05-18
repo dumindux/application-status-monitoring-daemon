@@ -7,7 +7,7 @@
     "serverName": "web-a"
   },
   "tls": {
-    "key": "/home/duminduk/keys/server.key",
-    "cert": "/home/duminduk/keys/server.crt"
+    "key": "/home/admins/keys/server.key",
+    "cert": "/home/admins/keys/server.crt"
   }
 }

@@ -1,6 +1,7 @@
 const https = require('https');
 const fs = require('fs');
 const logger = require('./utils/logger');
+
 const monitors = {
     tcp: require('./monitors/tcp.monitor'),
     pm2: require('./monitors/pm2.monitor'),
@@ -26,16 +27,6 @@ const wsServer = new WebSocketServer({
     autoAcceptConnections: false
 });
 
-async function getStatus() {
-    return {
-        serverName: global.config.application.serverName,
-        status: [].concat(...(await Promise.all([tcpMonitor.getStatus(applicationConfig.filter(application =>
-        application.type === 'tcp')),
-    pm2Monitor.getStatus(applicationConfig.filter(application =>
-        application.type === 'pm2'))])))
-    };
-}
-
 wsServer.on('request', (request) => {
     const connection = request.accept();
     console.log(request);
@@ -56,11 +47,13 @@ server.listen(global.config.application.port, () => {
     logger.info(`server is listening on port ${global.config.application.port}`);
 });
 
-applicationConfig.forEach(application => {
-    setInterval(() =>
-        monitors[application.type].getStatusOfApplication(application)
-            .then(status =>
-                connections.forEach(connection =>
-                    connection.sendUTF(JSON.stringify(status))))
-    , application.interval)
+applicationConfig.forEach((application) => {
+    setInterval(
+        () =>
+            monitors[application.type].getStatusOfApplication(application)
+                .then(status =>
+                    connections.forEach(connection =>
+                        connection.sendUTF(JSON.stringify(status))))
+        , application.interval
+    );
 });
