@@ -44,18 +44,3 @@ applicationConfig.forEach((application) => {
         }
     }, application.interval);
 });
-
-// {
-//     "name": "React Course Manager",
-//     "type": "tcp",
-//     "host": "localhost",
-//     "port": 4440,
-//     "interval": 2000
-//   },
-//   {
-//     "name": "SFTP File Processor",
-//     "type": "pm2",
-//     "host": "localhost",
-//     "processName": "file-processor",
-//     "interval": 2000
-//   },
