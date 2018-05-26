@@ -10,8 +10,8 @@ function pm2Connect() {
 }
 
 async function getStatusOfApplication(application) {
-    const err = await pm2Connect();
-    if (err) {
+    const error = await pm2Connect();
+    if (error) {
         return [];
     }
 
@@ -36,12 +36,12 @@ async function getStatusOfApplication(application) {
                 name: application.name,
                 status: processDescription[0].pm2_env.status === 'online' ? 'online' : 'offline',
                 type: 'pm2',
-                pmUptime: processDescription[0].pm2_env.pm_uptime + '',
-                createdAt: processDescription[0].pm2_env.created_at + '',
-                pmId: processDescription[0].pm2_env.pm_id + '',
-                restartTime: processDescription[0].pm2_env.restart_time + '',
-                unstableRestarts: processDescription[0].pm2_env.unstable_restarts + '',
-                nodeVersion: processDescription[0].pm2_env.node_version + ''
+                pmUptime: processDescription[0].pm2_env.pm_uptime,
+                createdAt: processDescription[0].pm2_env.created_at,
+                pmId: processDescription[0].pm2_env.pm_id,
+                restartTime: processDescription[0].pm2_env.restart_time,
+                unstableRestarts: processDescription[0].pm2_env.unstable_restarts,
+                nodeVersion: processDescription[0].pm2_env.node_version
             });
         });
     });

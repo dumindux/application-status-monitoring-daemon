@@ -13,7 +13,7 @@ const WebSocketClient = require('websocket').client;
 
 let connection = null;
 
-const client = new WebSocketClient();
+const client = new WebSocketClient({ tlsOptions: { rejectUnauthorized: false } });
 
 client.on('connectFailed', error =>
     logger.error(`connect error:  ${error.toString()}`));
@@ -31,23 +31,18 @@ client.on('connect', (newConnection) => {
     });
 });
 
-client.connect(`ws://${global.config.remote.host}:${global.config.remote.port}/`, 'echo-protocol');
+client.connect(`wss://${global.config.remote.host}:${global.config.remote.port}/`);
 
 applicationConfig.forEach((application) => {
-    setInterval(
-        () =>
-            monitors[application.type].getStatusOfApplication(application)
-                .then((statusParam) => {
-                    const status = statusParam;
-                    if (connection && connection.connected) {
-                        status.time = Date.now();
-                        connection.sendUTF(JSON.stringify(status));
-                    } else {
-                        client.connect(`ws://${global.config.remote.host}:${global.config.remote.port}/`, 'echo-protocol');
-                    }
-                })
-        , application.interval
-    );
+    setInterval(async () => {
+        const status = await monitors[application.type].getStatusOfApplication(application);
+        if (connection && connection.connected) {
+            status.time = Date.now();
+            connection.sendUTF(JSON.stringify(status));
+        } else {
+            client.connect(`wss://${global.config.remote.host}:${global.config.remote.port}/`);
+        }
+    }, application.interval);
 });
 
 // {
