@@ -21,7 +21,7 @@ async function getStatusOfApplication(application) {
                 logger.error(`error while connecting to ${application.name}`);
                 logger.error(err);
                 resolve({
-                    monitoringServer: global.config.serverName,
+                    monitoringServer: global.config.application.serverName,
                     name: application.name,
                     status: 'offline',
                     type: 'pm2'
@@ -32,7 +32,7 @@ async function getStatusOfApplication(application) {
             logger.info(`successfully connected to ${application.name}`);
 
             resolve({
-                monitoringServer: global.config.serverName,
+                monitoringServer: global.config.application.serverName,
                 name: application.name,
                 status: processDescription[0].pm2_env.status === 'online' ? 'online' : 'offline',
                 type: 'pm2',

@@ -1,5 +1,3 @@
-const https = require('https');
-const fs = require('fs');
 const logger = require('./utils/logger');
 
 const monitors = {
@@ -11,49 +9,58 @@ const monitors = {
 global.config = require('./config/system.config.json');
 const applicationConfig = require('./config/application.config.json');
 
-const httpsOptions = {
-    key: fs.readFileSync(global.config.tls.key),
-    cert: fs.readFileSync(global.config.tls.cert)
-};
+const WebSocketClient = require('websocket').client;
 
-const server = https.createServer(httpsOptions);
+let connection = null;
 
-const WebSocketServer = require('websocket').server;
+const client = new WebSocketClient();
 
-const connections = [];
+client.on('connectFailed', error =>
+    logger.error(`connect error:  ${error.toString()}`));
 
-const wsServer = new WebSocketServer({
-    httpServer: server,
-    autoAcceptConnections: false
-});
-
-wsServer.on('request', (request) => {
-    const connection = request.accept();
-    console.log(request);
-    logger.info(`a client is connected from ${request.remoteAddress}`);
-
-    connections.push(connection);
-
-    connection.on('close', () => {
-        const index = connections.indexOf(connection);
-        if (index !== -1) {
-            connections.splice(index, 1);
-        }
-        logger.info('client disconnected');
+client.on('connect', (newConnection) => {
+    logger.info('websocket client connected');
+    connection = newConnection;
+    newConnection.on('error', (error) => {
+        logger.error(`connection error:  ${error.toString()}`);
+        connection = null;
+    });
+    newConnection.on('close', () => {
+        logger.error('echo-protocol connection closed');
+        connection = null;
     });
 });
 
-server.listen(global.config.application.port, () => {
-    logger.info(`server is listening on port ${global.config.application.port}`);
-});
+client.connect(`ws://${global.config.remote.host}:${global.config.remote.port}/`, 'echo-protocol');
 
 applicationConfig.forEach((application) => {
     setInterval(
         () =>
             monitors[application.type].getStatusOfApplication(application)
-                .then(status =>
-                    connections.forEach(connection =>
-                        connection.sendUTF(JSON.stringify(status))))
+                .then((statusParam) => {
+                    const status = statusParam;
+                    if (connection && connection.connected) {
+                        status.time = Date.now();
+                        connection.sendUTF(JSON.stringify(status));
+                    } else {
+                        client.connect(`ws://${global.config.remote.host}:${global.config.remote.port}/`, 'echo-protocol');
+                    }
+                })
         , application.interval
     );
 });
+
+// {
+//     "name": "React Course Manager",
+//     "type": "tcp",
+//     "host": "localhost",
+//     "port": 4440,
+//     "interval": 2000
+//   },
+//   {
+//     "name": "SFTP File Processor",
+//     "type": "pm2",
+//     "host": "localhost",
+//     "processName": "file-processor",
+//     "interval": 2000
+//   },

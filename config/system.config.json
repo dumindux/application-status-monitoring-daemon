@@ -6,6 +6,10 @@
     "port": 1675,
     "serverName": "web-a"
   },
+  "remote": {
+    "host": "localhost",
+    "port": "3005"
+  },
   "tls": {
     "key": "/home/admins/keys/server.key",
     "cert": "/home/admins/keys/server.crt"
