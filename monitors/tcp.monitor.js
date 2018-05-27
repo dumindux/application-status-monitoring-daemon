@@ -7,10 +7,14 @@ function getStatusOfApplication(application) {
             connection.destroy();
             logger.info(`successfully connected to ${application.name}`);
             resolve({
-                monitoringServer: global.config.application.serverName,
-                name: application.name,
-                status: 'online',
-                type: 'tcp'
+                tags: {
+                    monitoringServer: global.config.application.serverName,
+                    name: application.name,
+                    type: 'tcp'
+                },
+                fields: {
+                    status: 'online'
+                }
             });
         });
 
@@ -19,10 +23,14 @@ function getStatusOfApplication(application) {
             logger.error(`error while connecting to ${application.name}`);
             logger.error(err);
             resolve({
-                monitoringServer: global.config.application.serverName,
-                name: application.name,
-                status: 'offline',
-                type: 'tcp'
+                tags: {
+                    monitoringServer: global.config.application.serverName,
+                    name: application.name,
+                    type: 'tcp'
+                },
+                fields: {
+                    status: 'offline'
+                }
             });
         });
     });

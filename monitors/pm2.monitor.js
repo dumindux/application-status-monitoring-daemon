@@ -21,10 +21,14 @@ async function getStatusOfApplication(application) {
                 logger.error(`error while connecting to ${application.name}`);
                 logger.error(err);
                 resolve({
-                    monitoringServer: global.config.application.serverName,
-                    name: application.name,
-                    status: 'offline',
-                    type: 'pm2'
+                    tags: {
+                        monitoringServer: global.config.application.serverName,
+                        name: application.name,
+                        type: 'pm2'
+                    },
+                    fields: {
+                        status: 'offline'
+                    }
                 });
                 return;
             }
@@ -32,16 +36,20 @@ async function getStatusOfApplication(application) {
             logger.info(`successfully connected to ${application.name}`);
 
             resolve({
-                monitoringServer: global.config.application.serverName,
-                name: application.name,
-                status: processDescription[0].pm2_env.status === 'online' ? 'online' : 'offline',
-                type: 'pm2',
-                pmUptime: processDescription[0].pm2_env.pm_uptime,
-                createdAt: processDescription[0].pm2_env.created_at,
-                pmId: processDescription[0].pm2_env.pm_id,
-                restartTime: processDescription[0].pm2_env.restart_time,
-                unstableRestarts: processDescription[0].pm2_env.unstable_restarts,
-                nodeVersion: processDescription[0].pm2_env.node_version
+                tags: {
+                    monitoringServer: global.config.application.serverName,
+                    name: application.name,
+                    type: 'pm2'
+                },
+                fields: {
+                    status: processDescription[0].pm2_env.status === 'online' ? 'online' : 'offline',
+                    pmUptime: processDescription[0].pm2_env.pm_uptime,
+                    createdAt: processDescription[0].pm2_env.created_at,
+                    pmId: processDescription[0].pm2_env.pm_id,
+                    restartTime: processDescription[0].pm2_env.restart_time,
+                    unstableRestarts: processDescription[0].pm2_env.unstable_restarts,
+                    nodeVersion: processDescription[0].pm2_env.node_version
+                }
             });
         });
     });
