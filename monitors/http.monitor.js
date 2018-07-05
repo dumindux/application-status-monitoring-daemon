@@ -13,7 +13,8 @@ function getStatusOfApplication(application) {
                     type: 'http'
                 },
                 fields: {
-                    status: 'offline'
+                    status: 'offline',
+                    statusValue: 0
                 }
             });
         };
@@ -32,7 +33,8 @@ function getStatusOfApplication(application) {
                     type: 'http'
                 },
                 fields: {
-                    status: 'online'
+                    status: 'online',
+                    statusValue: 1
                 }
             });
         });

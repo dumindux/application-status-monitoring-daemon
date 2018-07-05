@@ -13,7 +13,8 @@ function getStatusOfApplication(application) {
                     type: 'tcp'
                 },
                 fields: {
-                    status: 'online'
+                    status: 'online',
+                    statusValue: 1
                 }
             });
         });
@@ -29,7 +30,8 @@ function getStatusOfApplication(application) {
                     type: 'tcp'
                 },
                 fields: {
-                    status: 'offline'
+                    status: 'offline',
+                    statusValue: 0
                 }
             });
         });

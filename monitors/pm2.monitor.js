@@ -27,7 +27,8 @@ async function getStatusOfApplication(application) {
                         type: 'pm2'
                     },
                     fields: {
-                        status: 'offline'
+                        status: 'offline',
+                        statusValue: 0
                     }
                 });
                 return;
@@ -43,6 +44,7 @@ async function getStatusOfApplication(application) {
                 },
                 fields: {
                     status: processDescription[0].pm2_env.status === 'online' ? 'online' : 'offline',
+                    statusValue: 1,
                     pmUptime: processDescription[0].pm2_env.pm_uptime,
                     createdAt: processDescription[0].pm2_env.created_at,
                     pmId: processDescription[0].pm2_env.pm_id,
